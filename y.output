@@ -1,0 +1,2989 @@
+Nonterminals useless in grammar
+
+   tablerepeatmain
+   $@14
+
+
+Terminals unused in grammar
+
+   "!="
+   '<'
+   "<="
+   '>'
+   ">="
+   "=="
+   '+'
+   '-'
+   '*'
+   '/'
+
+
+Rules useless in grammar
+
+  133 $@14: %empty
+
+  134 tablerepeatmain: IDTABLE ',' $@14 tablerepeatmain
+  135                | IDTABLE
+  136                | %empty
+
+
+State 39 conflicts: 1 shift/reduce
+State 52 conflicts: 1 shift/reduce, 1 reduce/reduce
+State 82 conflicts: 1 shift/reduce
+State 103 conflicts: 1 shift/reduce
+State 176 conflicts: 1 shift/reduce
+State 180 conflicts: 1 shift/reduce
+State 182 conflicts: 1 shift/reduce
+State 202 conflicts: 1 shift/reduce
+State 238 conflicts: 1 shift/reduce
+
+
+Grammar
+
+    0 $accept: program $end
+
+    1 $@1: %empty
+
+    2 $@2: %empty
+
+    3 program: $@1 PROGRAM $@2 ID '{' programblock main '}'
+
+    4 $@3: %empty
+
+    5 $@4: %empty
+
+    6 main: MAIN '(' ')' '{' $@3 declarations_main $@4 sequence '}'
+
+    7 ID: IDENT
+
+    8 IDTABLE: IDENT '[' CONST ']'
+    9        | IDENT '[' ID ']'
+
+   10 programblock: class programblock
+   11             | %empty
+
+   12 $@5: %empty
+
+   13 $@6: %empty
+
+   14 $@7: %empty
+
+   15 class: CLASS ID $@5 '{' $@6 declarations $@7 constructors function '}'
+
+   16 $@8: %empty
+
+   17 $@9: %empty
+
+   18 $@10: %empty
+
+   19 class: CLASS ID EXTENDS ID $@8 '{' $@9 declarations $@10 constructors function '}'
+
+   20 declarations_main: vardecmain tabledecmain objdec
+
+   21 $@11: %empty
+
+   22 declarations: $@11 vardec tabledec
+
+   23 $@12: %empty
+
+   24 vardecmain: VAR $@12 varrepeatmain ENDVAR
+
+   25 $@13: %empty
+
+   26 varrepeatmain: ID ',' $@13 varrepeatmain
+   27              | ID
+   28              | %empty
+
+   29 tabledecmain: TABLE tablerepeat ENDTABLE
+
+   30 vardec: VAR varrepeat ENDVAR
+
+   31 $@15: %empty
+
+   32 varrepeat: ID ',' $@15 varrepeat
+   33          | ID
+   34          | %empty
+
+   35 tabledec: TABLE tablerepeat ENDTABLE
+
+   36 $@16: %empty
+
+   37 tablerepeat: IDTABLE ',' $@16 tablerepeat
+   38            | IDTABLE
+   39            | %empty
+
+   40 objdec: OBJECT objectrepeat ENDOBJECT
+
+   41 $@17: %empty
+
+   42 objectrepeat: ID ID ',' $@17 objectrepeat
+   43             | ID ID
+   44             | %empty
+
+   45 $@18: %empty
+
+   46 $@19: %empty
+
+   47 constructors: CONSTRUCTOR ID $@18 formalpars '{' $@19 sequence '}'
+   48             | %empty
+
+   49 function: functionrep
+   50         | functionrep function
+
+   51 $@20: %empty
+
+   52 $@21: %empty
+
+   53 functionrep: FUNCTION VAR ID $@20 formalpars '{' $@21 sequence '}'
+
+   54 $@22: %empty
+
+   55 $@23: %empty
+
+   56 functionrep: FUNCTION TABLE ID $@22 formalpars '{' $@23 sequence '}'
+
+   57 $@24: %empty
+
+   58 $@25: %empty
+
+   59 functionrep: FUNCTION ID $@24 formalpars '{' $@25 sequence '}'
+   60            | %empty
+
+   61 $@26: %empty
+
+   62 formalpars: '(' $@26 formalparlist ')'
+   63           | '(' ')'
+
+   64 formalparlist: formalparitem
+
+   65 $@27: %empty
+
+   66 formalparlist: formalparitem ',' $@27 formalparlist
+
+   67 formalparitem: VAR ID
+   68              | TABLE ID
+   69              | ID ID
+
+   70 sequence: statement ';'
+   71         | statement ';' sequence
+
+   72 statement: assignment
+   73          | if
+   74          | while
+   75          | return
+   76          | call
+   77          | print
+   78          | input
+   79          | super
+   80          | %empty
+
+   81 assignment: ID ASSIGN expr
+   82           | ID ASSIGN input
+   83           | IDTABLE ASSIGN expr
+   84           | IDTABLE ASSIGN input
+
+   85 $@28: %empty
+
+   86 $@29: %empty
+
+   87 if: IF '(' condition ')' '{' $@28 sequence '}' $@29 else
+
+   88 $@30: %empty
+
+   89 else: ELSE '{' $@30 sequence '}'
+   90     | %empty
+
+   91 $@31: %empty
+
+   92 while: WHILE '(' condition ')' '{' $@31 sequence '}'
+
+   93 return: RETURN '(' expr ')'
+
+   94 input: INPUT '(' ID ')'
+   95      | INPUT '(' IDTABLE ')'
+
+   96 super: SUPER '(' ID '(' actualpars ')' ')'
+
+   97 call: ID '.' ID '(' actualpars ')'
+   98     | ID '(' actualpars ')'
+
+   99 actualpars: actualparlist
+  100           | %empty
+
+  101 actualparlist: actualparitem
+  102              | actualparitem ',' actualparlist
+
+  103 actualparitem: ID
+  104              | IDTABLE
+  105              | expr
+
+  106 condition: bterm
+  107          | bterm OR condition
+
+  108 bterm: bfactor
+  109      | bfactor AND bterm
+
+  110 bfactor: NOT '[' condition ']'
+  111        | '[' condition ']'
+  112        | expr RELATOP expr
+  113        | expr DIFF expr
+  114        | expr
+
+  115 expr: optsign term
+  116     | optsign term optsignterm
+
+  117 optsignterm: ADDSUBOPS term
+  118            | ADDSUBOPS term optsignterm
+
+  119 optsign: ADDSUBOPS
+  120        | %empty
+
+  121 term: factor
+  122     | factor optsignfactor
+
+  123 optsignfactor: MULDIVOPS factor
+  124              | MULDIVOPS factor optsignfactor
+
+  125 factor: CONST
+  126       | '(' expr ')'
+  127       | funccall
+  128       | IDTABLE
+
+  129 funccall: ID '.' ID '(' actualpars ')'
+  130         | ID '(' actualpars ')'
+  131         | ID
+
+  132 print: PRINT '(' ID ')'
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'(' (40) 6 62 63 87 92 93 94 95 96 97 98 126 129 130 132
+')' (41) 6 62 63 87 92 93 94 95 96 97 98 126 129 130 132
+'*' (42)
+'+' (43)
+',' (44) 26 32 37 42 66 102
+'-' (45)
+'.' (46) 97 129
+'/' (47)
+';' (59) 70 71
+'<' (60)
+'>' (62)
+'[' (91) 8 9 110 111
+']' (93) 8 9 110 111
+'{' (123) 3 6 15 19 47 53 56 59 87 89 92
+'}' (125) 3 6 15 19 47 53 56 59 87 89 92
+error (256)
+VAR (258) 24 30 53 67
+ENDVAR (259) 24 30
+TABLE (260) 29 35 56 68
+ENDTABLE (261) 29 35
+OBJECT (262) 40
+ENDOBJECT (263) 40
+PROGRAM (264) 3
+IDENT (265) 7 8 9
+CONSTRUCTOR (266) 47
+MAIN (267) 6
+AND (268) 109
+OR (269) 107
+NOT (270) 110
+IF (271) 87
+ELSE (272) 89
+WHILE (273) 92
+FUNCTION (274) 53 56 59
+RETURN (275) 93
+CLASS (276) 15 19
+EXTENDS (277) 19
+SUPER (278) 96
+PRINT (279) 132
+INPUT (280) 94 95
+ADDSUBOPS (281) 117 118 119
+MULDIVOPS (282) 123 124
+CONST (283) 8 125
+DIFF (284) 113
+RELATOP (285) 112
+ASSIGN (286) 81 82 83 84
+"!=" (287)
+"<=" (288)
+">=" (289)
+"==" (290)
+
+
+Nonterminals, with rules where they appear
+
+$accept (51)
+    on left: 0
+program (52)
+    on left: 3, on right: 0
+$@1 (53)
+    on left: 1, on right: 3
+$@2 (54)
+    on left: 2, on right: 3
+main (55)
+    on left: 6, on right: 3
+$@3 (56)
+    on left: 4, on right: 6
+$@4 (57)
+    on left: 5, on right: 6
+ID (58)
+    on left: 7, on right: 3 9 15 19 26 27 32 33 42 43 47 53 56 59 67
+    68 69 81 82 94 96 97 98 103 129 130 131 132
+IDTABLE (59)
+    on left: 8 9, on right: 37 38 83 84 95 104 128
+programblock (60)
+    on left: 10 11, on right: 3 10
+class (61)
+    on left: 15 19, on right: 10
+$@5 (62)
+    on left: 12, on right: 15
+$@6 (63)
+    on left: 13, on right: 15
+$@7 (64)
+    on left: 14, on right: 15
+$@8 (65)
+    on left: 16, on right: 19
+$@9 (66)
+    on left: 17, on right: 19
+$@10 (67)
+    on left: 18, on right: 19
+declarations_main (68)
+    on left: 20, on right: 6
+declarations (69)
+    on left: 22, on right: 15 19
+$@11 (70)
+    on left: 21, on right: 22
+vardecmain (71)
+    on left: 24, on right: 20
+$@12 (72)
+    on left: 23, on right: 24
+varrepeatmain (73)
+    on left: 26 27 28, on right: 24 26
+$@13 (74)
+    on left: 25, on right: 26
+tabledecmain (75)
+    on left: 29, on right: 20
+vardec (76)
+    on left: 30, on right: 22
+varrepeat (77)
+    on left: 32 33 34, on right: 30 32
+$@15 (78)
+    on left: 31, on right: 32
+tabledec (79)
+    on left: 35, on right: 22
+tablerepeat (80)
+    on left: 37 38 39, on right: 29 35 37
+$@16 (81)
+    on left: 36, on right: 37
+objdec (82)
+    on left: 40, on right: 20
+objectrepeat (83)
+    on left: 42 43 44, on right: 40 42
+$@17 (84)
+    on left: 41, on right: 42
+constructors (85)
+    on left: 47 48, on right: 15 19
+$@18 (86)
+    on left: 45, on right: 47
+$@19 (87)
+    on left: 46, on right: 47
+function (88)
+    on left: 49 50, on right: 15 19 50
+functionrep (89)
+    on left: 53 56 59 60, on right: 49 50
+$@20 (90)
+    on left: 51, on right: 53
+$@21 (91)
+    on left: 52, on right: 53
+$@22 (92)
+    on left: 54, on right: 56
+$@23 (93)
+    on left: 55, on right: 56
+$@24 (94)
+    on left: 57, on right: 59
+$@25 (95)
+    on left: 58, on right: 59
+formalpars (96)
+    on left: 62 63, on right: 47 53 56 59
+$@26 (97)
+    on left: 61, on right: 62
+formalparlist (98)
+    on left: 64 66, on right: 62 66
+$@27 (99)
+    on left: 65, on right: 66
+formalparitem (100)
+    on left: 67 68 69, on right: 64 66
+sequence (101)
+    on left: 70 71, on right: 6 47 53 56 59 71 87 89 92
+statement (102)
+    on left: 72 73 74 75 76 77 78 79 80, on right: 70 71
+assignment (103)
+    on left: 81 82 83 84, on right: 72
+if (104)
+    on left: 87, on right: 73
+$@28 (105)
+    on left: 85, on right: 87
+$@29 (106)
+    on left: 86, on right: 87
+else (107)
+    on left: 89 90, on right: 87
+$@30 (108)
+    on left: 88, on right: 89
+while (109)
+    on left: 92, on right: 74
+$@31 (110)
+    on left: 91, on right: 92
+return (111)
+    on left: 93, on right: 75
+input (112)
+    on left: 94 95, on right: 78 82 84
+super (113)
+    on left: 96, on right: 79
+call (114)
+    on left: 97 98, on right: 76
+actualpars (115)
+    on left: 99 100, on right: 96 97 98 129 130
+actualparlist (116)
+    on left: 101 102, on right: 99 102
+actualparitem (117)
+    on left: 103 104 105, on right: 101 102
+condition (118)
+    on left: 106 107, on right: 87 92 107 110 111
+bterm (119)
+    on left: 108 109, on right: 106 107 109
+bfactor (120)
+    on left: 110 111 112 113 114, on right: 108 109
+expr (121)
+    on left: 115 116, on right: 81 83 93 105 112 113 114 126
+optsignterm (122)
+    on left: 117 118, on right: 116 118
+optsign (123)
+    on left: 119 120, on right: 115 116
+term (124)
+    on left: 121 122, on right: 115 116 117 118
+optsignfactor (125)
+    on left: 123 124, on right: 122 124
+factor (126)
+    on left: 125 126 127 128, on right: 121 122 123 124
+funccall (127)
+    on left: 129 130 131, on right: 127
+print (128)
+    on left: 132, on right: 77
+
+
+State 0
+
+    0 $accept: . program $end
+
+    $default  reduce using rule 1 ($@1)
+
+    program  go to state 1
+    $@1      go to state 2
+
+
+State 1
+
+    0 $accept: program . $end
+
+    $end  shift, and go to state 3
+
+
+State 2
+
+    3 program: $@1 . PROGRAM $@2 ID '{' programblock main '}'
+
+    PROGRAM  shift, and go to state 4
+
+
+State 3
+
+    0 $accept: program $end .
+
+    $default  accept
+
+
+State 4
+
+    3 program: $@1 PROGRAM . $@2 ID '{' programblock main '}'
+
+    $default  reduce using rule 2 ($@2)
+
+    $@2  go to state 5
+
+
+State 5
+
+    3 program: $@1 PROGRAM $@2 . ID '{' programblock main '}'
+
+    IDENT  shift, and go to state 6
+
+    ID  go to state 7
+
+
+State 6
+
+    7 ID: IDENT .
+
+    $default  reduce using rule 7 (ID)
+
+
+State 7
+
+    3 program: $@1 PROGRAM $@2 ID . '{' programblock main '}'
+
+    '{'  shift, and go to state 8
+
+
+State 8
+
+    3 program: $@1 PROGRAM $@2 ID '{' . programblock main '}'
+
+    CLASS  shift, and go to state 9
+
+    $default  reduce using rule 11 (programblock)
+
+    programblock  go to state 10
+    class         go to state 11
+
+
+State 9
+
+   15 class: CLASS . ID $@5 '{' $@6 declarations $@7 constructors function '}'
+   19      | CLASS . ID EXTENDS ID $@8 '{' $@9 declarations $@10 constructors function '}'
+
+    IDENT  shift, and go to state 6
+
+    ID  go to state 12
+
+
+State 10
+
+    3 program: $@1 PROGRAM $@2 ID '{' programblock . main '}'
+
+    MAIN  shift, and go to state 13
+
+    main  go to state 14
+
+
+State 11
+
+   10 programblock: class . programblock
+
+    CLASS  shift, and go to state 9
+
+    $default  reduce using rule 11 (programblock)
+
+    programblock  go to state 15
+    class         go to state 11
+
+
+State 12
+
+   15 class: CLASS ID . $@5 '{' $@6 declarations $@7 constructors function '}'
+   19      | CLASS ID . EXTENDS ID $@8 '{' $@9 declarations $@10 constructors function '}'
+
+    EXTENDS  shift, and go to state 16
+
+    $default  reduce using rule 12 ($@5)
+
+    $@5  go to state 17
+
+
+State 13
+
+    6 main: MAIN . '(' ')' '{' $@3 declarations_main $@4 sequence '}'
+
+    '('  shift, and go to state 18
+
+
+State 14
+
+    3 program: $@1 PROGRAM $@2 ID '{' programblock main . '}'
+
+    '}'  shift, and go to state 19
+
+
+State 15
+
+   10 programblock: class programblock .
+
+    $default  reduce using rule 10 (programblock)
+
+
+State 16
+
+   19 class: CLASS ID EXTENDS . ID $@8 '{' $@9 declarations $@10 constructors function '}'
+
+    IDENT  shift, and go to state 6
+
+    ID  go to state 20
+
+
+State 17
+
+   15 class: CLASS ID $@5 . '{' $@6 declarations $@7 constructors function '}'
+
+    '{'  shift, and go to state 21
+
+
+State 18
+
+    6 main: MAIN '(' . ')' '{' $@3 declarations_main $@4 sequence '}'
+
+    ')'  shift, and go to state 22
+
+
+State 19
+
+    3 program: $@1 PROGRAM $@2 ID '{' programblock main '}' .
+
+    $default  reduce using rule 3 (program)
+
+
+State 20
+
+   19 class: CLASS ID EXTENDS ID . $@8 '{' $@9 declarations $@10 constructors function '}'
+
+    $default  reduce using rule 16 ($@8)
+
+    $@8  go to state 23
+
+
+State 21
+
+   15 class: CLASS ID $@5 '{' . $@6 declarations $@7 constructors function '}'
+
+    $default  reduce using rule 13 ($@6)
+
+    $@6  go to state 24
+
+
+State 22
+
+    6 main: MAIN '(' ')' . '{' $@3 declarations_main $@4 sequence '}'
+
+    '{'  shift, and go to state 25
+
+
+State 23
+
+   19 class: CLASS ID EXTENDS ID $@8 . '{' $@9 declarations $@10 constructors function '}'
+
+    '{'  shift, and go to state 26
+
+
+State 24
+
+   15 class: CLASS ID $@5 '{' $@6 . declarations $@7 constructors function '}'
+
+    $default  reduce using rule 21 ($@11)
+
+    declarations  go to state 27
+    $@11          go to state 28
+
+
+State 25
+
+    6 main: MAIN '(' ')' '{' . $@3 declarations_main $@4 sequence '}'
+
+    $default  reduce using rule 4 ($@3)
+
+    $@3  go to state 29
+
+
+State 26
+
+   19 class: CLASS ID EXTENDS ID $@8 '{' . $@9 declarations $@10 constructors function '}'
+
+    $default  reduce using rule 17 ($@9)
+
+    $@9  go to state 30
+
+
+State 27
+
+   15 class: CLASS ID $@5 '{' $@6 declarations . $@7 constructors function '}'
+
+    $default  reduce using rule 14 ($@7)
+
+    $@7  go to state 31
+
+
+State 28
+
+   22 declarations: $@11 . vardec tabledec
+
+    VAR  shift, and go to state 32
+
+    vardec  go to state 33
+
+
+State 29
+
+    6 main: MAIN '(' ')' '{' $@3 . declarations_main $@4 sequence '}'
+
+    VAR  shift, and go to state 34
+
+    declarations_main  go to state 35
+    vardecmain         go to state 36
+
+
+State 30
+
+   19 class: CLASS ID EXTENDS ID $@8 '{' $@9 . declarations $@10 constructors function '}'
+
+    $default  reduce using rule 21 ($@11)
+
+    declarations  go to state 37
+    $@11          go to state 28
+
+
+State 31
+
+   15 class: CLASS ID $@5 '{' $@6 declarations $@7 . constructors function '}'
+
+    CONSTRUCTOR  shift, and go to state 38
+
+    $default  reduce using rule 48 (constructors)
+
+    constructors  go to state 39
+
+
+State 32
+
+   30 vardec: VAR . varrepeat ENDVAR
+
+    IDENT  shift, and go to state 6
+
+    $default  reduce using rule 34 (varrepeat)
+
+    ID         go to state 40
+    varrepeat  go to state 41
+
+
+State 33
+
+   22 declarations: $@11 vardec . tabledec
+
+    TABLE  shift, and go to state 42
+
+    tabledec  go to state 43
+
+
+State 34
+
+   24 vardecmain: VAR . $@12 varrepeatmain ENDVAR
+
+    $default  reduce using rule 23 ($@12)
+
+    $@12  go to state 44
+
+
+State 35
+
+    6 main: MAIN '(' ')' '{' $@3 declarations_main . $@4 sequence '}'
+
+    $default  reduce using rule 5 ($@4)
+
+    $@4  go to state 45
+
+
+State 36
+
+   20 declarations_main: vardecmain . tabledecmain objdec
+
+    TABLE  shift, and go to state 46
+
+    tabledecmain  go to state 47
+
+
+State 37
+
+   19 class: CLASS ID EXTENDS ID $@8 '{' $@9 declarations . $@10 constructors function '}'
+
+    $default  reduce using rule 18 ($@10)
+
+    $@10  go to state 48
+
+
+State 38
+
+   47 constructors: CONSTRUCTOR . ID $@18 formalpars '{' $@19 sequence '}'
+
+    IDENT  shift, and go to state 6
+
+    ID  go to state 49
+
+
+State 39
+
+   15 class: CLASS ID $@5 '{' $@6 declarations $@7 constructors . function '}'
+
+    FUNCTION  shift, and go to state 50
+
+    FUNCTION  [reduce using rule 60 (functionrep)]
+    $default  reduce using rule 60 (functionrep)
+
+    function     go to state 51
+    functionrep  go to state 52
+
+
+State 40
+
+   32 varrepeat: ID . ',' $@15 varrepeat
+   33          | ID .
+
+    ','  shift, and go to state 53
+
+    $default  reduce using rule 33 (varrepeat)
+
+
+State 41
+
+   30 vardec: VAR varrepeat . ENDVAR
+
+    ENDVAR  shift, and go to state 54
+
+
+State 42
+
+   35 tabledec: TABLE . tablerepeat ENDTABLE
+
+    IDENT  shift, and go to state 55
+
+    $default  reduce using rule 39 (tablerepeat)
+
+    IDTABLE      go to state 56
+    tablerepeat  go to state 57
+
+
+State 43
+
+   22 declarations: $@11 vardec tabledec .
+
+    $default  reduce using rule 22 (declarations)
+
+
+State 44
+
+   24 vardecmain: VAR $@12 . varrepeatmain ENDVAR
+
+    IDENT  shift, and go to state 6
+
+    $default  reduce using rule 28 (varrepeatmain)
+
+    ID             go to state 58
+    varrepeatmain  go to state 59
+
+
+State 45
+
+    6 main: MAIN '(' ')' '{' $@3 declarations_main $@4 . sequence '}'
+
+    IDENT   shift, and go to state 60
+    IF      shift, and go to state 61
+    WHILE   shift, and go to state 62
+    RETURN  shift, and go to state 63
+    SUPER   shift, and go to state 64
+    PRINT   shift, and go to state 65
+    INPUT   shift, and go to state 66
+
+    $default  reduce using rule 80 (statement)
+
+    ID          go to state 67
+    IDTABLE     go to state 68
+    sequence    go to state 69
+    statement   go to state 70
+    assignment  go to state 71
+    if          go to state 72
+    while       go to state 73
+    return      go to state 74
+    input       go to state 75
+    super       go to state 76
+    call        go to state 77
+    print       go to state 78
+
+
+State 46
+
+   29 tabledecmain: TABLE . tablerepeat ENDTABLE
+
+    IDENT  shift, and go to state 55
+
+    $default  reduce using rule 39 (tablerepeat)
+
+    IDTABLE      go to state 56
+    tablerepeat  go to state 79
+
+
+State 47
+
+   20 declarations_main: vardecmain tabledecmain . objdec
+
+    OBJECT  shift, and go to state 80
+
+    objdec  go to state 81
+
+
+State 48
+
+   19 class: CLASS ID EXTENDS ID $@8 '{' $@9 declarations $@10 . constructors function '}'
+
+    CONSTRUCTOR  shift, and go to state 38
+
+    $default  reduce using rule 48 (constructors)
+
+    constructors  go to state 82
+
+
+State 49
+
+   47 constructors: CONSTRUCTOR ID . $@18 formalpars '{' $@19 sequence '}'
+
+    $default  reduce using rule 45 ($@18)
+
+    $@18  go to state 83
+
+
+State 50
+
+   53 functionrep: FUNCTION . VAR ID $@20 formalpars '{' $@21 sequence '}'
+   56            | FUNCTION . TABLE ID $@22 formalpars '{' $@23 sequence '}'
+   59            | FUNCTION . ID $@24 formalpars '{' $@25 sequence '}'
+
+    VAR    shift, and go to state 84
+    TABLE  shift, and go to state 85
+    IDENT  shift, and go to state 6
+
+    ID  go to state 86
+
+
+State 51
+
+   15 class: CLASS ID $@5 '{' $@6 declarations $@7 constructors function . '}'
+
+    '}'  shift, and go to state 87
+
+
+State 52
+
+   49 function: functionrep .
+   50         | functionrep . function
+
+    FUNCTION  shift, and go to state 50
+
+    FUNCTION  [reduce using rule 60 (functionrep)]
+    '}'       reduce using rule 49 (function)
+    '}'       [reduce using rule 60 (functionrep)]
+    $default  reduce using rule 49 (function)
+
+    function     go to state 88
+    functionrep  go to state 52
+
+
+State 53
+
+   32 varrepeat: ID ',' . $@15 varrepeat
+
+    $default  reduce using rule 31 ($@15)
+
+    $@15  go to state 89
+
+
+State 54
+
+   30 vardec: VAR varrepeat ENDVAR .
+
+    $default  reduce using rule 30 (vardec)
+
+
+State 55
+
+    8 IDTABLE: IDENT . '[' CONST ']'
+    9        | IDENT . '[' ID ']'
+
+    '['  shift, and go to state 90
+
+
+State 56
+
+   37 tablerepeat: IDTABLE . ',' $@16 tablerepeat
+   38            | IDTABLE .
+
+    ','  shift, and go to state 91
+
+    $default  reduce using rule 38 (tablerepeat)
+
+
+State 57
+
+   35 tabledec: TABLE tablerepeat . ENDTABLE
+
+    ENDTABLE  shift, and go to state 92
+
+
+State 58
+
+   26 varrepeatmain: ID . ',' $@13 varrepeatmain
+   27              | ID .
+
+    ','  shift, and go to state 93
+
+    $default  reduce using rule 27 (varrepeatmain)
+
+
+State 59
+
+   24 vardecmain: VAR $@12 varrepeatmain . ENDVAR
+
+    ENDVAR  shift, and go to state 94
+
+
+State 60
+
+    7 ID: IDENT .
+    8 IDTABLE: IDENT . '[' CONST ']'
+    9        | IDENT . '[' ID ']'
+
+    '['  shift, and go to state 90
+
+    $default  reduce using rule 7 (ID)
+
+
+State 61
+
+   87 if: IF . '(' condition ')' '{' $@28 sequence '}' $@29 else
+
+    '('  shift, and go to state 95
+
+
+State 62
+
+   92 while: WHILE . '(' condition ')' '{' $@31 sequence '}'
+
+    '('  shift, and go to state 96
+
+
+State 63
+
+   93 return: RETURN . '(' expr ')'
+
+    '('  shift, and go to state 97
+
+
+State 64
+
+   96 super: SUPER . '(' ID '(' actualpars ')' ')'
+
+    '('  shift, and go to state 98
+
+
+State 65
+
+  132 print: PRINT . '(' ID ')'
+
+    '('  shift, and go to state 99
+
+
+State 66
+
+   94 input: INPUT . '(' ID ')'
+   95      | INPUT . '(' IDTABLE ')'
+
+    '('  shift, and go to state 100
+
+
+State 67
+
+   81 assignment: ID . ASSIGN expr
+   82           | ID . ASSIGN input
+   97 call: ID . '.' ID '(' actualpars ')'
+   98     | ID . '(' actualpars ')'
+
+    ASSIGN  shift, and go to state 101
+    '.'     shift, and go to state 102
+    '('     shift, and go to state 103
+
+
+State 68
+
+   83 assignment: IDTABLE . ASSIGN expr
+   84           | IDTABLE . ASSIGN input
+
+    ASSIGN  shift, and go to state 104
+
+
+State 69
+
+    6 main: MAIN '(' ')' '{' $@3 declarations_main $@4 sequence . '}'
+
+    '}'  shift, and go to state 105
+
+
+State 70
+
+   70 sequence: statement . ';'
+   71         | statement . ';' sequence
+
+    ';'  shift, and go to state 106
+
+
+State 71
+
+   72 statement: assignment .
+
+    $default  reduce using rule 72 (statement)
+
+
+State 72
+
+   73 statement: if .
+
+    $default  reduce using rule 73 (statement)
+
+
+State 73
+
+   74 statement: while .
+
+    $default  reduce using rule 74 (statement)
+
+
+State 74
+
+   75 statement: return .
+
+    $default  reduce using rule 75 (statement)
+
+
+State 75
+
+   78 statement: input .
+
+    $default  reduce using rule 78 (statement)
+
+
+State 76
+
+   79 statement: super .
+
+    $default  reduce using rule 79 (statement)
+
+
+State 77
+
+   76 statement: call .
+
+    $default  reduce using rule 76 (statement)
+
+
+State 78
+
+   77 statement: print .
+
+    $default  reduce using rule 77 (statement)
+
+
+State 79
+
+   29 tabledecmain: TABLE tablerepeat . ENDTABLE
+
+    ENDTABLE  shift, and go to state 107
+
+
+State 80
+
+   40 objdec: OBJECT . objectrepeat ENDOBJECT
+
+    IDENT  shift, and go to state 6
+
+    $default  reduce using rule 44 (objectrepeat)
+
+    ID            go to state 108
+    objectrepeat  go to state 109
+
+
+State 81
+
+   20 declarations_main: vardecmain tabledecmain objdec .
+
+    $default  reduce using rule 20 (declarations_main)
+
+
+State 82
+
+   19 class: CLASS ID EXTENDS ID $@8 '{' $@9 declarations $@10 constructors . function '}'
+
+    FUNCTION  shift, and go to state 50
+
+    FUNCTION  [reduce using rule 60 (functionrep)]
+    $default  reduce using rule 60 (functionrep)
+
+    function     go to state 110
+    functionrep  go to state 52
+
+
+State 83
+
+   47 constructors: CONSTRUCTOR ID $@18 . formalpars '{' $@19 sequence '}'
+
+    '('  shift, and go to state 111
+
+    formalpars  go to state 112
+
+
+State 84
+
+   53 functionrep: FUNCTION VAR . ID $@20 formalpars '{' $@21 sequence '}'
+
+    IDENT  shift, and go to state 6
+
+    ID  go to state 113
+
+
+State 85
+
+   56 functionrep: FUNCTION TABLE . ID $@22 formalpars '{' $@23 sequence '}'
+
+    IDENT  shift, and go to state 6
+
+    ID  go to state 114
+
+
+State 86
+
+   59 functionrep: FUNCTION ID . $@24 formalpars '{' $@25 sequence '}'
+
+    $default  reduce using rule 57 ($@24)
+
+    $@24  go to state 115
+
+
+State 87
+
+   15 class: CLASS ID $@5 '{' $@6 declarations $@7 constructors function '}' .
+
+    $default  reduce using rule 15 (class)
+
+
+State 88
+
+   50 function: functionrep function .
+
+    $default  reduce using rule 50 (function)
+
+
+State 89
+
+   32 varrepeat: ID ',' $@15 . varrepeat
+
+    IDENT  shift, and go to state 6
+
+    $default  reduce using rule 34 (varrepeat)
+
+    ID         go to state 40
+    varrepeat  go to state 116
+
+
+State 90
+
+    8 IDTABLE: IDENT '[' . CONST ']'
+    9        | IDENT '[' . ID ']'
+
+    IDENT  shift, and go to state 6
+    CONST  shift, and go to state 117
+
+    ID  go to state 118
+
+
+State 91
+
+   37 tablerepeat: IDTABLE ',' . $@16 tablerepeat
+
+    $default  reduce using rule 36 ($@16)
+
+    $@16  go to state 119
+
+
+State 92
+
+   35 tabledec: TABLE tablerepeat ENDTABLE .
+
+    $default  reduce using rule 35 (tabledec)
+
+
+State 93
+
+   26 varrepeatmain: ID ',' . $@13 varrepeatmain
+
+    $default  reduce using rule 25 ($@13)
+
+    $@13  go to state 120
+
+
+State 94
+
+   24 vardecmain: VAR $@12 varrepeatmain ENDVAR .
+
+    $default  reduce using rule 24 (vardecmain)
+
+
+State 95
+
+   87 if: IF '(' . condition ')' '{' $@28 sequence '}' $@29 else
+
+    NOT        shift, and go to state 121
+    ADDSUBOPS  shift, and go to state 122
+    '['        shift, and go to state 123
+
+    $default  reduce using rule 120 (optsign)
+
+    condition  go to state 124
+    bterm      go to state 125
+    bfactor    go to state 126
+    expr       go to state 127
+    optsign    go to state 128
+
+
+State 96
+
+   92 while: WHILE '(' . condition ')' '{' $@31 sequence '}'
+
+    NOT        shift, and go to state 121
+    ADDSUBOPS  shift, and go to state 122
+    '['        shift, and go to state 123
+
+    $default  reduce using rule 120 (optsign)
+
+    condition  go to state 129
+    bterm      go to state 125
+    bfactor    go to state 126
+    expr       go to state 127
+    optsign    go to state 128
+
+
+State 97
+
+   93 return: RETURN '(' . expr ')'
+
+    ADDSUBOPS  shift, and go to state 122
+
+    $default  reduce using rule 120 (optsign)
+
+    expr     go to state 130
+    optsign  go to state 128
+
+
+State 98
+
+   96 super: SUPER '(' . ID '(' actualpars ')' ')'
+
+    IDENT  shift, and go to state 6
+
+    ID  go to state 131
+
+
+State 99
+
+  132 print: PRINT '(' . ID ')'
+
+    IDENT  shift, and go to state 6
+
+    ID  go to state 132
+
+
+State 100
+
+   94 input: INPUT '(' . ID ')'
+   95      | INPUT '(' . IDTABLE ')'
+
+    IDENT  shift, and go to state 60
+
+    ID       go to state 133
+    IDTABLE  go to state 134
+
+
+State 101
+
+   81 assignment: ID ASSIGN . expr
+   82           | ID ASSIGN . input
+
+    INPUT      shift, and go to state 66
+    ADDSUBOPS  shift, and go to state 122
+
+    $default  reduce using rule 120 (optsign)
+
+    input    go to state 135
+    expr     go to state 136
+    optsign  go to state 128
+
+
+State 102
+
+   97 call: ID '.' . ID '(' actualpars ')'
+
+    IDENT  shift, and go to state 6
+
+    ID  go to state 137
+
+
+State 103
+
+   98 call: ID '(' . actualpars ')'
+
+    IDENT      shift, and go to state 60
+    ADDSUBOPS  shift, and go to state 122
+
+    IDENT     [reduce using rule 120 (optsign)]
+    ')'       reduce using rule 100 (actualpars)
+    $default  reduce using rule 120 (optsign)
+
+    ID             go to state 138
+    IDTABLE        go to state 139
+    actualpars     go to state 140
+    actualparlist  go to state 141
+    actualparitem  go to state 142
+    expr           go to state 143
+    optsign        go to state 128
+
+
+State 104
+
+   83 assignment: IDTABLE ASSIGN . expr
+   84           | IDTABLE ASSIGN . input
+
+    INPUT      shift, and go to state 66
+    ADDSUBOPS  shift, and go to state 122
+
+    $default  reduce using rule 120 (optsign)
+
+    input    go to state 144
+    expr     go to state 145
+    optsign  go to state 128
+
+
+State 105
+
+    6 main: MAIN '(' ')' '{' $@3 declarations_main $@4 sequence '}' .
+
+    $default  reduce using rule 6 (main)
+
+
+State 106
+
+   70 sequence: statement ';' .
+   71         | statement ';' . sequence
+
+    IDENT   shift, and go to state 60
+    IF      shift, and go to state 61
+    WHILE   shift, and go to state 62
+    RETURN  shift, and go to state 63
+    SUPER   shift, and go to state 64
+    PRINT   shift, and go to state 65
+    INPUT   shift, and go to state 66
+
+    ';'       reduce using rule 80 (statement)
+    $default  reduce using rule 70 (sequence)
+
+    ID          go to state 67
+    IDTABLE     go to state 68
+    sequence    go to state 146
+    statement   go to state 70
+    assignment  go to state 71
+    if          go to state 72
+    while       go to state 73
+    return      go to state 74
+    input       go to state 75
+    super       go to state 76
+    call        go to state 77
+    print       go to state 78
+
+
+State 107
+
+   29 tabledecmain: TABLE tablerepeat ENDTABLE .
+
+    $default  reduce using rule 29 (tabledecmain)
+
+
+State 108
+
+   42 objectrepeat: ID . ID ',' $@17 objectrepeat
+   43             | ID . ID
+
+    IDENT  shift, and go to state 6
+
+    ID  go to state 147
+
+
+State 109
+
+   40 objdec: OBJECT objectrepeat . ENDOBJECT
+
+    ENDOBJECT  shift, and go to state 148
+
+
+State 110
+
+   19 class: CLASS ID EXTENDS ID $@8 '{' $@9 declarations $@10 constructors function . '}'
+
+    '}'  shift, and go to state 149
+
+
+State 111
+
+   62 formalpars: '(' . $@26 formalparlist ')'
+   63           | '(' . ')'
+
+    ')'  shift, and go to state 150
+
+    $default  reduce using rule 61 ($@26)
+
+    $@26  go to state 151
+
+
+State 112
+
+   47 constructors: CONSTRUCTOR ID $@18 formalpars . '{' $@19 sequence '}'
+
+    '{'  shift, and go to state 152
+
+
+State 113
+
+   53 functionrep: FUNCTION VAR ID . $@20 formalpars '{' $@21 sequence '}'
+
+    $default  reduce using rule 51 ($@20)
+
+    $@20  go to state 153
+
+
+State 114
+
+   56 functionrep: FUNCTION TABLE ID . $@22 formalpars '{' $@23 sequence '}'
+
+    $default  reduce using rule 54 ($@22)
+
+    $@22  go to state 154
+
+
+State 115
+
+   59 functionrep: FUNCTION ID $@24 . formalpars '{' $@25 sequence '}'
+
+    '('  shift, and go to state 111
+
+    formalpars  go to state 155
+
+
+State 116
+
+   32 varrepeat: ID ',' $@15 varrepeat .
+
+    $default  reduce using rule 32 (varrepeat)
+
+
+State 117
+
+    8 IDTABLE: IDENT '[' CONST . ']'
+
+    ']'  shift, and go to state 156
+
+
+State 118
+
+    9 IDTABLE: IDENT '[' ID . ']'
+
+    ']'  shift, and go to state 157
+
+
+State 119
+
+   37 tablerepeat: IDTABLE ',' $@16 . tablerepeat
+
+    IDENT  shift, and go to state 55
+
+    $default  reduce using rule 39 (tablerepeat)
+
+    IDTABLE      go to state 56
+    tablerepeat  go to state 158
+
+
+State 120
+
+   26 varrepeatmain: ID ',' $@13 . varrepeatmain
+
+    IDENT  shift, and go to state 6
+
+    $default  reduce using rule 28 (varrepeatmain)
+
+    ID             go to state 58
+    varrepeatmain  go to state 159
+
+
+State 121
+
+  110 bfactor: NOT . '[' condition ']'
+
+    '['  shift, and go to state 160
+
+
+State 122
+
+  119 optsign: ADDSUBOPS .
+
+    $default  reduce using rule 119 (optsign)
+
+
+State 123
+
+  111 bfactor: '[' . condition ']'
+
+    NOT        shift, and go to state 121
+    ADDSUBOPS  shift, and go to state 122
+    '['        shift, and go to state 123
+
+    $default  reduce using rule 120 (optsign)
+
+    condition  go to state 161
+    bterm      go to state 125
+    bfactor    go to state 126
+    expr       go to state 127
+    optsign    go to state 128
+
+
+State 124
+
+   87 if: IF '(' condition . ')' '{' $@28 sequence '}' $@29 else
+
+    ')'  shift, and go to state 162
+
+
+State 125
+
+  106 condition: bterm .
+  107          | bterm . OR condition
+
+    OR  shift, and go to state 163
+
+    $default  reduce using rule 106 (condition)
+
+
+State 126
+
+  108 bterm: bfactor .
+  109      | bfactor . AND bterm
+
+    AND  shift, and go to state 164
+
+    $default  reduce using rule 108 (bterm)
+
+
+State 127
+
+  112 bfactor: expr . RELATOP expr
+  113        | expr . DIFF expr
+  114        | expr .
+
+    DIFF     shift, and go to state 165
+    RELATOP  shift, and go to state 166
+
+    $default  reduce using rule 114 (bfactor)
+
+
+State 128
+
+  115 expr: optsign . term
+  116     | optsign . term optsignterm
+
+    IDENT  shift, and go to state 60
+    CONST  shift, and go to state 167
+    '('    shift, and go to state 168
+
+    ID        go to state 169
+    IDTABLE   go to state 170
+    term      go to state 171
+    factor    go to state 172
+    funccall  go to state 173
+
+
+State 129
+
+   92 while: WHILE '(' condition . ')' '{' $@31 sequence '}'
+
+    ')'  shift, and go to state 174
+
+
+State 130
+
+   93 return: RETURN '(' expr . ')'
+
+    ')'  shift, and go to state 175
+
+
+State 131
+
+   96 super: SUPER '(' ID . '(' actualpars ')' ')'
+
+    '('  shift, and go to state 176
+
+
+State 132
+
+  132 print: PRINT '(' ID . ')'
+
+    ')'  shift, and go to state 177
+
+
+State 133
+
+   94 input: INPUT '(' ID . ')'
+
+    ')'  shift, and go to state 178
+
+
+State 134
+
+   95 input: INPUT '(' IDTABLE . ')'
+
+    ')'  shift, and go to state 179
+
+
+State 135
+
+   82 assignment: ID ASSIGN input .
+
+    $default  reduce using rule 82 (assignment)
+
+
+State 136
+
+   81 assignment: ID ASSIGN expr .
+
+    $default  reduce using rule 81 (assignment)
+
+
+State 137
+
+   97 call: ID '.' ID . '(' actualpars ')'
+
+    '('  shift, and go to state 180
+
+
+State 138
+
+  103 actualparitem: ID .
+
+    $default  reduce using rule 103 (actualparitem)
+
+
+State 139
+
+  104 actualparitem: IDTABLE .
+
+    $default  reduce using rule 104 (actualparitem)
+
+
+State 140
+
+   98 call: ID '(' actualpars . ')'
+
+    ')'  shift, and go to state 181
+
+
+State 141
+
+   99 actualpars: actualparlist .
+
+    $default  reduce using rule 99 (actualpars)
+
+
+State 142
+
+  101 actualparlist: actualparitem .
+  102              | actualparitem . ',' actualparlist
+
+    ','  shift, and go to state 182
+
+    $default  reduce using rule 101 (actualparlist)
+
+
+State 143
+
+  105 actualparitem: expr .
+
+    $default  reduce using rule 105 (actualparitem)
+
+
+State 144
+
+   84 assignment: IDTABLE ASSIGN input .
+
+    $default  reduce using rule 84 (assignment)
+
+
+State 145
+
+   83 assignment: IDTABLE ASSIGN expr .
+
+    $default  reduce using rule 83 (assignment)
+
+
+State 146
+
+   71 sequence: statement ';' sequence .
+
+    $default  reduce using rule 71 (sequence)
+
+
+State 147
+
+   42 objectrepeat: ID ID . ',' $@17 objectrepeat
+   43             | ID ID .
+
+    ','  shift, and go to state 183
+
+    $default  reduce using rule 43 (objectrepeat)
+
+
+State 148
+
+   40 objdec: OBJECT objectrepeat ENDOBJECT .
+
+    $default  reduce using rule 40 (objdec)
+
+
+State 149
+
+   19 class: CLASS ID EXTENDS ID $@8 '{' $@9 declarations $@10 constructors function '}' .
+
+    $default  reduce using rule 19 (class)
+
+
+State 150
+
+   63 formalpars: '(' ')' .
+
+    $default  reduce using rule 63 (formalpars)
+
+
+State 151
+
+   62 formalpars: '(' $@26 . formalparlist ')'
+
+    VAR    shift, and go to state 184
+    TABLE  shift, and go to state 185
+    IDENT  shift, and go to state 6
+
+    ID             go to state 186
+    formalparlist  go to state 187
+    formalparitem  go to state 188
+
+
+State 152
+
+   47 constructors: CONSTRUCTOR ID $@18 formalpars '{' . $@19 sequence '}'
+
+    $default  reduce using rule 46 ($@19)
+
+    $@19  go to state 189
+
+
+State 153
+
+   53 functionrep: FUNCTION VAR ID $@20 . formalpars '{' $@21 sequence '}'
+
+    '('  shift, and go to state 111
+
+    formalpars  go to state 190
+
+
+State 154
+
+   56 functionrep: FUNCTION TABLE ID $@22 . formalpars '{' $@23 sequence '}'
+
+    '('  shift, and go to state 111
+
+    formalpars  go to state 191
+
+
+State 155
+
+   59 functionrep: FUNCTION ID $@24 formalpars . '{' $@25 sequence '}'
+
+    '{'  shift, and go to state 192
+
+
+State 156
+
+    8 IDTABLE: IDENT '[' CONST ']' .
+
+    $default  reduce using rule 8 (IDTABLE)
+
+
+State 157
+
+    9 IDTABLE: IDENT '[' ID ']' .
+
+    $default  reduce using rule 9 (IDTABLE)
+
+
+State 158
+
+   37 tablerepeat: IDTABLE ',' $@16 tablerepeat .
+
+    $default  reduce using rule 37 (tablerepeat)
+
+
+State 159
+
+   26 varrepeatmain: ID ',' $@13 varrepeatmain .
+
+    $default  reduce using rule 26 (varrepeatmain)
+
+
+State 160
+
+  110 bfactor: NOT '[' . condition ']'
+
+    NOT        shift, and go to state 121
+    ADDSUBOPS  shift, and go to state 122
+    '['        shift, and go to state 123
+
+    $default  reduce using rule 120 (optsign)
+
+    condition  go to state 193
+    bterm      go to state 125
+    bfactor    go to state 126
+    expr       go to state 127
+    optsign    go to state 128
+
+
+State 161
+
+  111 bfactor: '[' condition . ']'
+
+    ']'  shift, and go to state 194
+
+
+State 162
+
+   87 if: IF '(' condition ')' . '{' $@28 sequence '}' $@29 else
+
+    '{'  shift, and go to state 195
+
+
+State 163
+
+  107 condition: bterm OR . condition
+
+    NOT        shift, and go to state 121
+    ADDSUBOPS  shift, and go to state 122
+    '['        shift, and go to state 123
+
+    $default  reduce using rule 120 (optsign)
+
+    condition  go to state 196
+    bterm      go to state 125
+    bfactor    go to state 126
+    expr       go to state 127
+    optsign    go to state 128
+
+
+State 164
+
+  109 bterm: bfactor AND . bterm
+
+    NOT        shift, and go to state 121
+    ADDSUBOPS  shift, and go to state 122
+    '['        shift, and go to state 123
+
+    $default  reduce using rule 120 (optsign)
+
+    bterm    go to state 197
+    bfactor  go to state 126
+    expr     go to state 127
+    optsign  go to state 128
+
+
+State 165
+
+  113 bfactor: expr DIFF . expr
+
+    ADDSUBOPS  shift, and go to state 122
+
+    $default  reduce using rule 120 (optsign)
+
+    expr     go to state 198
+    optsign  go to state 128
+
+
+State 166
+
+  112 bfactor: expr RELATOP . expr
+
+    ADDSUBOPS  shift, and go to state 122
+
+    $default  reduce using rule 120 (optsign)
+
+    expr     go to state 199
+    optsign  go to state 128
+
+
+State 167
+
+  125 factor: CONST .
+
+    $default  reduce using rule 125 (factor)
+
+
+State 168
+
+  126 factor: '(' . expr ')'
+
+    ADDSUBOPS  shift, and go to state 122
+
+    $default  reduce using rule 120 (optsign)
+
+    expr     go to state 200
+    optsign  go to state 128
+
+
+State 169
+
+  129 funccall: ID . '.' ID '(' actualpars ')'
+  130         | ID . '(' actualpars ')'
+  131         | ID .
+
+    '.'  shift, and go to state 201
+    '('  shift, and go to state 202
+
+    $default  reduce using rule 131 (funccall)
+
+
+State 170
+
+  128 factor: IDTABLE .
+
+    $default  reduce using rule 128 (factor)
+
+
+State 171
+
+  115 expr: optsign term .
+  116     | optsign term . optsignterm
+
+    ADDSUBOPS  shift, and go to state 203
+
+    $default  reduce using rule 115 (expr)
+
+    optsignterm  go to state 204
+
+
+State 172
+
+  121 term: factor .
+  122     | factor . optsignfactor
+
+    MULDIVOPS  shift, and go to state 205
+
+    $default  reduce using rule 121 (term)
+
+    optsignfactor  go to state 206
+
+
+State 173
+
+  127 factor: funccall .
+
+    $default  reduce using rule 127 (factor)
+
+
+State 174
+
+   92 while: WHILE '(' condition ')' . '{' $@31 sequence '}'
+
+    '{'  shift, and go to state 207
+
+
+State 175
+
+   93 return: RETURN '(' expr ')' .
+
+    $default  reduce using rule 93 (return)
+
+
+State 176
+
+   96 super: SUPER '(' ID '(' . actualpars ')' ')'
+
+    IDENT      shift, and go to state 60
+    ADDSUBOPS  shift, and go to state 122
+
+    IDENT     [reduce using rule 120 (optsign)]
+    ')'       reduce using rule 100 (actualpars)
+    $default  reduce using rule 120 (optsign)
+
+    ID             go to state 138
+    IDTABLE        go to state 139
+    actualpars     go to state 208
+    actualparlist  go to state 141
+    actualparitem  go to state 142
+    expr           go to state 143
+    optsign        go to state 128
+
+
+State 177
+
+  132 print: PRINT '(' ID ')' .
+
+    $default  reduce using rule 132 (print)
+
+
+State 178
+
+   94 input: INPUT '(' ID ')' .
+
+    $default  reduce using rule 94 (input)
+
+
+State 179
+
+   95 input: INPUT '(' IDTABLE ')' .
+
+    $default  reduce using rule 95 (input)
+
+
+State 180
+
+   97 call: ID '.' ID '(' . actualpars ')'
+
+    IDENT      shift, and go to state 60
+    ADDSUBOPS  shift, and go to state 122
+
+    IDENT     [reduce using rule 120 (optsign)]
+    ')'       reduce using rule 100 (actualpars)
+    $default  reduce using rule 120 (optsign)
+
+    ID             go to state 138
+    IDTABLE        go to state 139
+    actualpars     go to state 209
+    actualparlist  go to state 141
+    actualparitem  go to state 142
+    expr           go to state 143
+    optsign        go to state 128
+
+
+State 181
+
+   98 call: ID '(' actualpars ')' .
+
+    $default  reduce using rule 98 (call)
+
+
+State 182
+
+  102 actualparlist: actualparitem ',' . actualparlist
+
+    IDENT      shift, and go to state 60
+    ADDSUBOPS  shift, and go to state 122
+
+    IDENT     [reduce using rule 120 (optsign)]
+    $default  reduce using rule 120 (optsign)
+
+    ID             go to state 138
+    IDTABLE        go to state 139
+    actualparlist  go to state 210
+    actualparitem  go to state 142
+    expr           go to state 143
+    optsign        go to state 128
+
+
+State 183
+
+   42 objectrepeat: ID ID ',' . $@17 objectrepeat
+
+    $default  reduce using rule 41 ($@17)
+
+    $@17  go to state 211
+
+
+State 184
+
+   67 formalparitem: VAR . ID
+
+    IDENT  shift, and go to state 6
+
+    ID  go to state 212
+
+
+State 185
+
+   68 formalparitem: TABLE . ID
+
+    IDENT  shift, and go to state 6
+
+    ID  go to state 213
+
+
+State 186
+
+   69 formalparitem: ID . ID
+
+    IDENT  shift, and go to state 6
+
+    ID  go to state 214
+
+
+State 187
+
+   62 formalpars: '(' $@26 formalparlist . ')'
+
+    ')'  shift, and go to state 215
+
+
+State 188
+
+   64 formalparlist: formalparitem .
+   66              | formalparitem . ',' $@27 formalparlist
+
+    ','  shift, and go to state 216
+
+    $default  reduce using rule 64 (formalparlist)
+
+
+State 189
+
+   47 constructors: CONSTRUCTOR ID $@18 formalpars '{' $@19 . sequence '}'
+
+    IDENT   shift, and go to state 60
+    IF      shift, and go to state 61
+    WHILE   shift, and go to state 62
+    RETURN  shift, and go to state 63
+    SUPER   shift, and go to state 64
+    PRINT   shift, and go to state 65
+    INPUT   shift, and go to state 66
+
+    $default  reduce using rule 80 (statement)
+
+    ID          go to state 67
+    IDTABLE     go to state 68
+    sequence    go to state 217
+    statement   go to state 70
+    assignment  go to state 71
+    if          go to state 72
+    while       go to state 73
+    return      go to state 74
+    input       go to state 75
+    super       go to state 76
+    call        go to state 77
+    print       go to state 78
+
+
+State 190
+
+   53 functionrep: FUNCTION VAR ID $@20 formalpars . '{' $@21 sequence '}'
+
+    '{'  shift, and go to state 218
+
+
+State 191
+
+   56 functionrep: FUNCTION TABLE ID $@22 formalpars . '{' $@23 sequence '}'
+
+    '{'  shift, and go to state 219
+
+
+State 192
+
+   59 functionrep: FUNCTION ID $@24 formalpars '{' . $@25 sequence '}'
+
+    $default  reduce using rule 58 ($@25)
+
+    $@25  go to state 220
+
+
+State 193
+
+  110 bfactor: NOT '[' condition . ']'
+
+    ']'  shift, and go to state 221
+
+
+State 194
+
+  111 bfactor: '[' condition ']' .
+
+    $default  reduce using rule 111 (bfactor)
+
+
+State 195
+
+   87 if: IF '(' condition ')' '{' . $@28 sequence '}' $@29 else
+
+    $default  reduce using rule 85 ($@28)
+
+    $@28  go to state 222
+
+
+State 196
+
+  107 condition: bterm OR condition .
+
+    $default  reduce using rule 107 (condition)
+
+
+State 197
+
+  109 bterm: bfactor AND bterm .
+
+    $default  reduce using rule 109 (bterm)
+
+
+State 198
+
+  113 bfactor: expr DIFF expr .
+
+    $default  reduce using rule 113 (bfactor)
+
+
+State 199
+
+  112 bfactor: expr RELATOP expr .
+
+    $default  reduce using rule 112 (bfactor)
+
+
+State 200
+
+  126 factor: '(' expr . ')'
+
+    ')'  shift, and go to state 223
+
+
+State 201
+
+  129 funccall: ID '.' . ID '(' actualpars ')'
+
+    IDENT  shift, and go to state 6
+
+    ID  go to state 224
+
+
+State 202
+
+  130 funccall: ID '(' . actualpars ')'
+
+    IDENT      shift, and go to state 60
+    ADDSUBOPS  shift, and go to state 122
+
+    IDENT     [reduce using rule 120 (optsign)]
+    ')'       reduce using rule 100 (actualpars)
+    $default  reduce using rule 120 (optsign)
+
+    ID             go to state 138
+    IDTABLE        go to state 139
+    actualpars     go to state 225
+    actualparlist  go to state 141
+    actualparitem  go to state 142
+    expr           go to state 143
+    optsign        go to state 128
+
+
+State 203
+
+  117 optsignterm: ADDSUBOPS . term
+  118            | ADDSUBOPS . term optsignterm
+
+    IDENT  shift, and go to state 60
+    CONST  shift, and go to state 167
+    '('    shift, and go to state 168
+
+    ID        go to state 169
+    IDTABLE   go to state 170
+    term      go to state 226
+    factor    go to state 172
+    funccall  go to state 173
+
+
+State 204
+
+  116 expr: optsign term optsignterm .
+
+    $default  reduce using rule 116 (expr)
+
+
+State 205
+
+  123 optsignfactor: MULDIVOPS . factor
+  124              | MULDIVOPS . factor optsignfactor
+
+    IDENT  shift, and go to state 60
+    CONST  shift, and go to state 167
+    '('    shift, and go to state 168
+
+    ID        go to state 169
+    IDTABLE   go to state 170
+    factor    go to state 227
+    funccall  go to state 173
+
+
+State 206
+
+  122 term: factor optsignfactor .
+
+    $default  reduce using rule 122 (term)
+
+
+State 207
+
+   92 while: WHILE '(' condition ')' '{' . $@31 sequence '}'
+
+    $default  reduce using rule 91 ($@31)
+
+    $@31  go to state 228
+
+
+State 208
+
+   96 super: SUPER '(' ID '(' actualpars . ')' ')'
+
+    ')'  shift, and go to state 229
+
+
+State 209
+
+   97 call: ID '.' ID '(' actualpars . ')'
+
+    ')'  shift, and go to state 230
+
+
+State 210
+
+  102 actualparlist: actualparitem ',' actualparlist .
+
+    $default  reduce using rule 102 (actualparlist)
+
+
+State 211
+
+   42 objectrepeat: ID ID ',' $@17 . objectrepeat
+
+    IDENT  shift, and go to state 6
+
+    $default  reduce using rule 44 (objectrepeat)
+
+    ID            go to state 108
+    objectrepeat  go to state 231
+
+
+State 212
+
+   67 formalparitem: VAR ID .
+
+    $default  reduce using rule 67 (formalparitem)
+
+
+State 213
+
+   68 formalparitem: TABLE ID .
+
+    $default  reduce using rule 68 (formalparitem)
+
+
+State 214
+
+   69 formalparitem: ID ID .
+
+    $default  reduce using rule 69 (formalparitem)
+
+
+State 215
+
+   62 formalpars: '(' $@26 formalparlist ')' .
+
+    $default  reduce using rule 62 (formalpars)
+
+
+State 216
+
+   66 formalparlist: formalparitem ',' . $@27 formalparlist
+
+    $default  reduce using rule 65 ($@27)
+
+    $@27  go to state 232
+
+
+State 217
+
+   47 constructors: CONSTRUCTOR ID $@18 formalpars '{' $@19 sequence . '}'
+
+    '}'  shift, and go to state 233
+
+
+State 218
+
+   53 functionrep: FUNCTION VAR ID $@20 formalpars '{' . $@21 sequence '}'
+
+    $default  reduce using rule 52 ($@21)
+
+    $@21  go to state 234
+
+
+State 219
+
+   56 functionrep: FUNCTION TABLE ID $@22 formalpars '{' . $@23 sequence '}'
+
+    $default  reduce using rule 55 ($@23)
+
+    $@23  go to state 235
+
+
+State 220
+
+   59 functionrep: FUNCTION ID $@24 formalpars '{' $@25 . sequence '}'
+
+    IDENT   shift, and go to state 60
+    IF      shift, and go to state 61
+    WHILE   shift, and go to state 62
+    RETURN  shift, and go to state 63
+    SUPER   shift, and go to state 64
+    PRINT   shift, and go to state 65
+    INPUT   shift, and go to state 66
+
+    $default  reduce using rule 80 (statement)
+
+    ID          go to state 67
+    IDTABLE     go to state 68
+    sequence    go to state 236
+    statement   go to state 70
+    assignment  go to state 71
+    if          go to state 72
+    while       go to state 73
+    return      go to state 74
+    input       go to state 75
+    super       go to state 76
+    call        go to state 77
+    print       go to state 78
+
+
+State 221
+
+  110 bfactor: NOT '[' condition ']' .
+
+    $default  reduce using rule 110 (bfactor)
+
+
+State 222
+
+   87 if: IF '(' condition ')' '{' $@28 . sequence '}' $@29 else
+
+    IDENT   shift, and go to state 60
+    IF      shift, and go to state 61
+    WHILE   shift, and go to state 62
+    RETURN  shift, and go to state 63
+    SUPER   shift, and go to state 64
+    PRINT   shift, and go to state 65
+    INPUT   shift, and go to state 66
+
+    $default  reduce using rule 80 (statement)
+
+    ID          go to state 67
+    IDTABLE     go to state 68
+    sequence    go to state 237
+    statement   go to state 70
+    assignment  go to state 71
+    if          go to state 72
+    while       go to state 73
+    return      go to state 74
+    input       go to state 75
+    super       go to state 76
+    call        go to state 77
+    print       go to state 78
+
+
+State 223
+
+  126 factor: '(' expr ')' .
+
+    $default  reduce using rule 126 (factor)
+
+
+State 224
+
+  129 funccall: ID '.' ID . '(' actualpars ')'
+
+    '('  shift, and go to state 238
+
+
+State 225
+
+  130 funccall: ID '(' actualpars . ')'
+
+    ')'  shift, and go to state 239
+
+
+State 226
+
+  117 optsignterm: ADDSUBOPS term .
+  118            | ADDSUBOPS term . optsignterm
+
+    ADDSUBOPS  shift, and go to state 203
+
+    $default  reduce using rule 117 (optsignterm)
+
+    optsignterm  go to state 240
+
+
+State 227
+
+  123 optsignfactor: MULDIVOPS factor .
+  124              | MULDIVOPS factor . optsignfactor
+
+    MULDIVOPS  shift, and go to state 205
+
+    $default  reduce using rule 123 (optsignfactor)
+
+    optsignfactor  go to state 241
+
+
+State 228
+
+   92 while: WHILE '(' condition ')' '{' $@31 . sequence '}'
+
+    IDENT   shift, and go to state 60
+    IF      shift, and go to state 61
+    WHILE   shift, and go to state 62
+    RETURN  shift, and go to state 63
+    SUPER   shift, and go to state 64
+    PRINT   shift, and go to state 65
+    INPUT   shift, and go to state 66
+
+    $default  reduce using rule 80 (statement)
+
+    ID          go to state 67
+    IDTABLE     go to state 68
+    sequence    go to state 242
+    statement   go to state 70
+    assignment  go to state 71
+    if          go to state 72
+    while       go to state 73
+    return      go to state 74
+    input       go to state 75
+    super       go to state 76
+    call        go to state 77
+    print       go to state 78
+
+
+State 229
+
+   96 super: SUPER '(' ID '(' actualpars ')' . ')'
+
+    ')'  shift, and go to state 243
+
+
+State 230
+
+   97 call: ID '.' ID '(' actualpars ')' .
+
+    $default  reduce using rule 97 (call)
+
+
+State 231
+
+   42 objectrepeat: ID ID ',' $@17 objectrepeat .
+
+    $default  reduce using rule 42 (objectrepeat)
+
+
+State 232
+
+   66 formalparlist: formalparitem ',' $@27 . formalparlist
+
+    VAR    shift, and go to state 184
+    TABLE  shift, and go to state 185
+    IDENT  shift, and go to state 6
+
+    ID             go to state 186
+    formalparlist  go to state 244
+    formalparitem  go to state 188
+
+
+State 233
+
+   47 constructors: CONSTRUCTOR ID $@18 formalpars '{' $@19 sequence '}' .
+
+    $default  reduce using rule 47 (constructors)
+
+
+State 234
+
+   53 functionrep: FUNCTION VAR ID $@20 formalpars '{' $@21 . sequence '}'
+
+    IDENT   shift, and go to state 60
+    IF      shift, and go to state 61
+    WHILE   shift, and go to state 62
+    RETURN  shift, and go to state 63
+    SUPER   shift, and go to state 64
+    PRINT   shift, and go to state 65
+    INPUT   shift, and go to state 66
+
+    $default  reduce using rule 80 (statement)
+
+    ID          go to state 67
+    IDTABLE     go to state 68
+    sequence    go to state 245
+    statement   go to state 70
+    assignment  go to state 71
+    if          go to state 72
+    while       go to state 73
+    return      go to state 74
+    input       go to state 75
+    super       go to state 76
+    call        go to state 77
+    print       go to state 78
+
+
+State 235
+
+   56 functionrep: FUNCTION TABLE ID $@22 formalpars '{' $@23 . sequence '}'
+
+    IDENT   shift, and go to state 60
+    IF      shift, and go to state 61
+    WHILE   shift, and go to state 62
+    RETURN  shift, and go to state 63
+    SUPER   shift, and go to state 64
+    PRINT   shift, and go to state 65
+    INPUT   shift, and go to state 66
+
+    $default  reduce using rule 80 (statement)
+
+    ID          go to state 67
+    IDTABLE     go to state 68
+    sequence    go to state 246
+    statement   go to state 70
+    assignment  go to state 71
+    if          go to state 72
+    while       go to state 73
+    return      go to state 74
+    input       go to state 75
+    super       go to state 76
+    call        go to state 77
+    print       go to state 78
+
+
+State 236
+
+   59 functionrep: FUNCTION ID $@24 formalpars '{' $@25 sequence . '}'
+
+    '}'  shift, and go to state 247
+
+
+State 237
+
+   87 if: IF '(' condition ')' '{' $@28 sequence . '}' $@29 else
+
+    '}'  shift, and go to state 248
+
+
+State 238
+
+  129 funccall: ID '.' ID '(' . actualpars ')'
+
+    IDENT      shift, and go to state 60
+    ADDSUBOPS  shift, and go to state 122
+
+    IDENT     [reduce using rule 120 (optsign)]
+    ')'       reduce using rule 100 (actualpars)
+    $default  reduce using rule 120 (optsign)
+
+    ID             go to state 138
+    IDTABLE        go to state 139
+    actualpars     go to state 249
+    actualparlist  go to state 141
+    actualparitem  go to state 142
+    expr           go to state 143
+    optsign        go to state 128
+
+
+State 239
+
+  130 funccall: ID '(' actualpars ')' .
+
+    $default  reduce using rule 130 (funccall)
+
+
+State 240
+
+  118 optsignterm: ADDSUBOPS term optsignterm .
+
+    $default  reduce using rule 118 (optsignterm)
+
+
+State 241
+
+  124 optsignfactor: MULDIVOPS factor optsignfactor .
+
+    $default  reduce using rule 124 (optsignfactor)
+
+
+State 242
+
+   92 while: WHILE '(' condition ')' '{' $@31 sequence . '}'
+
+    '}'  shift, and go to state 250
+
+
+State 243
+
+   96 super: SUPER '(' ID '(' actualpars ')' ')' .
+
+    $default  reduce using rule 96 (super)
+
+
+State 244
+
+   66 formalparlist: formalparitem ',' $@27 formalparlist .
+
+    $default  reduce using rule 66 (formalparlist)
+
+
+State 245
+
+   53 functionrep: FUNCTION VAR ID $@20 formalpars '{' $@21 sequence . '}'
+
+    '}'  shift, and go to state 251
+
+
+State 246
+
+   56 functionrep: FUNCTION TABLE ID $@22 formalpars '{' $@23 sequence . '}'
+
+    '}'  shift, and go to state 252
+
+
+State 247
+
+   59 functionrep: FUNCTION ID $@24 formalpars '{' $@25 sequence '}' .
+
+    $default  reduce using rule 59 (functionrep)
+
+
+State 248
+
+   87 if: IF '(' condition ')' '{' $@28 sequence '}' . $@29 else
+
+    $default  reduce using rule 86 ($@29)
+
+    $@29  go to state 253
+
+
+State 249
+
+  129 funccall: ID '.' ID '(' actualpars . ')'
+
+    ')'  shift, and go to state 254
+
+
+State 250
+
+   92 while: WHILE '(' condition ')' '{' $@31 sequence '}' .
+
+    $default  reduce using rule 92 (while)
+
+
+State 251
+
+   53 functionrep: FUNCTION VAR ID $@20 formalpars '{' $@21 sequence '}' .
+
+    $default  reduce using rule 53 (functionrep)
+
+
+State 252
+
+   56 functionrep: FUNCTION TABLE ID $@22 formalpars '{' $@23 sequence '}' .
+
+    $default  reduce using rule 56 (functionrep)
+
+
+State 253
+
+   87 if: IF '(' condition ')' '{' $@28 sequence '}' $@29 . else
+
+    ELSE  shift, and go to state 255
+
+    $default  reduce using rule 90 (else)
+
+    else  go to state 256
+
+
+State 254
+
+  129 funccall: ID '.' ID '(' actualpars ')' .
+
+    $default  reduce using rule 129 (funccall)
+
+
+State 255
+
+   89 else: ELSE . '{' $@30 sequence '}'
+
+    '{'  shift, and go to state 257
+
+
+State 256
+
+   87 if: IF '(' condition ')' '{' $@28 sequence '}' $@29 else .
+
+    $default  reduce using rule 87 (if)
+
+
+State 257
+
+   89 else: ELSE '{' . $@30 sequence '}'
+
+    $default  reduce using rule 88 ($@30)
+
+    $@30  go to state 258
+
+
+State 258
+
+   89 else: ELSE '{' $@30 . sequence '}'
+
+    IDENT   shift, and go to state 60
+    IF      shift, and go to state 61
+    WHILE   shift, and go to state 62
+    RETURN  shift, and go to state 63
+    SUPER   shift, and go to state 64
+    PRINT   shift, and go to state 65
+    INPUT   shift, and go to state 66
+
+    $default  reduce using rule 80 (statement)
+
+    ID          go to state 67
+    IDTABLE     go to state 68
+    sequence    go to state 259
+    statement   go to state 70
+    assignment  go to state 71
+    if          go to state 72
+    while       go to state 73
+    return      go to state 74
+    input       go to state 75
+    super       go to state 76
+    call        go to state 77
+    print       go to state 78
+
+
+State 259
+
+   89 else: ELSE '{' $@30 sequence . '}'
+
+    '}'  shift, and go to state 260
+
+
+State 260
+
+   89 else: ELSE '{' $@30 sequence '}' .
+
+    $default  reduce using rule 89 (else)
